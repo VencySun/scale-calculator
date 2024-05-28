@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>等比例縮放計算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        label, input, button {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>等比例縮放計算器</h1>
+
+    <label for="initialWidth">初始寬度：</label>
+    <input type="number" id="initialWidth" required><br>
+    <label for="initialHeight">初始高度：</label>
+    <input type="number" id="initialHeight" required><br>
+    <button onclick="calculateRatioAndOrientation()">計算比例及方向</button><br><br>
+    
+    <div id="ratioSection" style="display: none;">
+        <p>計算的比例：<span id="ratio"></span></p>
+        <p>方向：<span id="orientation"></span></p>
+        <label for="newWidth">新寬度：</label>
+        <input type="number" id="newWidth" oninput="scaleDimensions()"><br>
+        <label for="newHeight">新高度：</label>
+        <input type="number" id="newHeight" oninput="scaleDimensions()"><br>
+        <p>結果：</p>
+        <p>新寬度：<span id="scaledWidth"></span></p>
+        <p>新高度：<span id="scaledHeight"></span></p>
+    </div>
+
+    <script>
+        let aspectRatio;
+
+        function calculateRatioAndOrientation() {
+            const initialWidth = parseFloat(document.getElementById('initialWidth').value);
+            const initialHeight = parseFloat(document.getElementById('initialHeight').value);
+            const orientationElement = document.getElementById('orientation');
+            const ratioElement = document.getElementById('ratio');
+
+            if (initialWidth > 0 && initialHeight > 0) {
+                aspectRatio = initialWidth / initialHeight;
+
+                let orientation;
+                if (initialWidth > initialHeight) {
+                    orientation = '橫式';
+                } else if (initialWidth < initialHeight) {
+                    orientation = '直式';
+                } else {
+                    orientation = '方形';
+                }
+
+                ratioElement.innerText = aspectRatio.toFixed(2);
+                orientationElement.innerText = orientation;
+                document.getElementById('ratioSection').style.display = 'block';
+            } else {
+                alert("請輸入有效的初始寬度和高度");
+            }
+        }
+
+        function scaleDimensions() {
+            const newWidth = parseFloat(document.getElementById('newWidth').value);
+            const newHeight = parseFloat(document.getElementById('newHeight').value);
+            const scaledWidthElement = document.getElementById('scaledWidth');
+            const scaledHeightElement = document.getElementById('scaledHeight');
+
+            if (newWidth > 0 && aspectRatio > 0) {
+                const scaledHeight = newWidth / aspectRatio;
+                scaledWidthElement.innerText = newWidth.toFixed(2);
+                scaledHeightElement.innerText = scaledHeight.toFixed(2);
+            } else if (newHeight > 0 && aspectRatio > 0) {
+                const scaledWidth = newHeight * aspectRatio;
+                scaledWidthElement.innerText = scaledWidth.toFixed(2);
+                scaledHeightElement.innerText = newHeight.toFixed(2);
+            } else {
+                scaledWidthElement.innerText = '';
+                scaledHeightElement.innerText = '';
+            }
+        }
+    </script>
+</body>
+</html>
